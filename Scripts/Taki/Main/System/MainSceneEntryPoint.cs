@@ -114,7 +114,6 @@ namespace Taki.Main.System
             var generationInfo = await _cubeFactory.GenerateCube(
                 _cubeSettings.PieceSpacing,
                 _cubeSettings.CubeSize,
-                false,
                 true);
 
             _cubeDataProvider.Setup(

@@ -37,7 +37,6 @@ namespace Taki.RubiksCube.System
             var generationInfo = await _cubeFactory.GenerateCube(
                 pieceSpacing,
                 cubeSize,
-                false,
                 true);
 
             if (generationInfo is null)
