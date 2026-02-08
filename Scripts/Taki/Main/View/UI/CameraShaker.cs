@@ -40,8 +40,10 @@ namespace Taki.Main.View
 
         public void SetOriginalPosition()
         {
-            _originalPosition = _cameraTransform.localPosition;
+            var localPos = _cameraTransform.localPosition;
+            _originalPosition = new Vector3(0f, localPos.y, 0f);
         }
+
 
         public void ShakeCamera()
         {
@@ -97,6 +99,8 @@ namespace Taki.Main.View
             {
                 _glitchWaveJitter.amount.value = 0f;
             }
+
+            _cameraTransform.localPosition = _originalPosition;
         }
     }
 }
