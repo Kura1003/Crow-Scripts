@@ -25,7 +25,7 @@ namespace Taki.StartMenu.System
         private float _accumulatedDistance = 0f;
         private Vector3[] _targetPositions;
 
-        private void Awake()
+        private void Start()
         {
             GenerateUIElements();
         }
@@ -71,6 +71,7 @@ namespace Taki.StartMenu.System
             Destroy(first.gameObject);
 
             var go = Instantiate(_uiElementPrefab, _container);
+            go.SetActive(true);
 
             if (go.TryGetComponent<RectTransform>(out var rect))
             {
@@ -86,36 +87,34 @@ namespace Taki.StartMenu.System
             {
                 if (_generatedElements[i] is not null)
                 {
-                    _generatedElements[i].position = _targetPositions[i];
+                    _generatedElements[i].anchoredPosition =
+                        new Vector2(_targetPositions[i].x, _targetPositions[i].y);
                 }
             }
         }
 
-        public void SetAnimationActive(bool active)
-        {
-            _isAnimationActive = active;
-        }
-
-        public void GenerateUIElements()
+        private void GenerateUIElements()
         {
             ClearElements();
 
-            Vector3 center = new Vector3(0f, _startY, 0f) + _container.position;
+            Vector2 center = new Vector2(0f, _startY);
 
-            _targetPositions = 
+            _targetPositions =
                 LinePointCalculator.GenerateLinePoints(
-                center,
-                _elementCount,
-                _spacing,
-                _plane
-            );
+                    center,
+                    _elementCount,
+                    _spacing,
+                    _plane
+                );
 
             foreach (var pos in _targetPositions)
             {
                 var go = Instantiate(_uiElementPrefab, _container);
+                go.SetActive(true);
+
                 if (go.TryGetComponent<RectTransform>(out var rect))
                 {
-                    rect.position = pos;
+                    rect.anchoredPosition = new Vector2(pos.x, pos.y);
                     _generatedElements.Add(rect);
                 }
             }
@@ -125,7 +124,10 @@ namespace Taki.StartMenu.System
         {
             foreach (var element in _generatedElements)
             {
-                if (element is not null) Destroy(element.gameObject);
+                if (element is not null)
+                {
+                    Destroy(element.gameObject);
+                }
             }
 
             _generatedElements.Clear();

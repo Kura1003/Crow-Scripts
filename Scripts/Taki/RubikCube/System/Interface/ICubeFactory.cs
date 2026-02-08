@@ -15,7 +15,6 @@ namespace Taki.RubiksCube.System
         UniTask<CubeGenerationInfo?> GenerateCube(
             float pieceSpacing,
             int cubeSize,
-            bool shouldPiecesBeActive,
             bool skipIntermediateYields = false);
 
         UniTask AnimateSpiralActivation(
