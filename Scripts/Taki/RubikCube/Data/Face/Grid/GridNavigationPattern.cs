@@ -6,7 +6,7 @@ namespace Taki.RubiksCube.Data
     {
         private static readonly Dictionary<int, List<(int row, int col)>> _spiralCache = new();
 
-        public static IReadOnlyList<(int row, int col)> GetSpiral(int n)
+        internal static IReadOnlyList<(int row, int col)> GetSpiral(int n)
         {
             if (_spiralCache.TryGetValue(n, out var cached)) return cached;
 
