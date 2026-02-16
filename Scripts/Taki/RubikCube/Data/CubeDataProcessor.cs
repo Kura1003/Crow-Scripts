@@ -109,6 +109,7 @@ namespace Taki.RubiksCube.Data
         {
             var buffers = _rotationBuffers[layerIndex];
             Thrower.IfNull(buffers, nameof(buffers));
+            
             return buffers;
         }
 
