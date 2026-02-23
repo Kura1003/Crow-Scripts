@@ -49,6 +49,7 @@ namespace Taki.Main.View
                 if (token.IsCancellationRequested) return;
 
                 int targetBatch = Mathf.Min(100, _maxPoolSize - _instantiatedObjects.Count);
+
                 for (int i = 0; i < targetBatch; i++)
                 {
                     CreateNewInstance();
@@ -85,6 +86,7 @@ namespace Taki.Main.View
         private void ReturnToPool(GameObject go)
         {
             if (go is null) return;
+
             go.SetActive(false);
             _poolStack.Push(go);
         }
@@ -134,21 +136,21 @@ namespace Taki.Main.View
 
             foreach (var obj in activeObjects)
             {
-                if (token.IsCancellationRequested || this is null || obj is null) return;
+                if (token.IsCancellationRequested) return;
+
                 obj.SetActive(true);
                 await UniTask.WaitForSeconds(_intervalSeconds, cancellationToken: token);
             }
 
-            if (token.IsCancellationRequested || this is null) return;
+            if (token.IsCancellationRequested) return;
+
             await UniTask.WaitForSeconds(_visibleDuration, cancellationToken: token);
 
             foreach (var obj in activeObjects)
             {
-                if (token.IsCancellationRequested || this is null) return;
-                if (obj is not null)
-                {
-                    ReturnToPool(obj);
-                }
+                if (token.IsCancellationRequested) return;
+
+                ReturnToPool(obj);
                 await UniTask.WaitForSeconds(_intervalSeconds, cancellationToken: token);
             }
         }
@@ -187,18 +189,28 @@ namespace Taki.Main.View
         private float GetRandomYRotation()
         {
             float newAngle;
-            int maxAttempts = 10;
             int attempts = 0;
+            int maxAttempts = 10;
 
             do
             {
                 newAngle = (float)RandomUtility.Range(0.0, 360.0);
                 attempts++;
             }
-            while (Mathf.Abs(Mathf.DeltaAngle(newAngle, _lastYRotation)) < _minAngleDifference && attempts < maxAttempts);
+            while (CanRetry(attempts, maxAttempts) && !IsAngleDifferenceValid(newAngle));
 
             _lastYRotation = newAngle;
             return newAngle;
+        }
+
+        private bool IsAngleDifferenceValid(float newAngle)
+        {
+            return Mathf.Abs(Mathf.DeltaAngle(newAngle, _lastYRotation)) >= _minAngleDifference;
+        }
+
+        private bool CanRetry(int attempts, int maxAttempts)
+        {
+            return attempts < maxAttempts;
         }
 
         private void Cleanup()

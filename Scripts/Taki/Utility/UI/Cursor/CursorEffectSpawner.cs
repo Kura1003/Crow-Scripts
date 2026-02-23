@@ -73,8 +73,6 @@ namespace Taki.Utility
 
         private void SpawnEffect(Vector2 localPoint)
         {
-            if (_cursorEffectPrefab == null) return;
-
             GameObject instance = Instantiate(_cursorEffectPrefab, _rectTransform);
             RectTransform instanceRect = instance.GetComponent<RectTransform>();
             instanceRect.anchoredPosition = localPoint;

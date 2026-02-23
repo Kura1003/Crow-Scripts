@@ -31,11 +31,7 @@ namespace Taki.Main.View
             SetOriginalPosition();
 
             _glitchWaveJitter = _postProcessEffectProvider.GetEffect<GlitchWaveJitter>();
-
-            if (_glitchWaveJitter != null)
-            {
-                _glitchWaveJitter.amount.value = 0f;
-            }
+            _glitchWaveJitter.amount.value = 0f;
         }
 
         public void SetOriginalPosition()

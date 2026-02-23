@@ -196,10 +196,12 @@ namespace Taki.RubiksCube.System
                 _onCubeCreated.OnNext(Unit.Default);
                 return new CubeGenerationInfo(faceManagersMap, axisInfoMap);
             }
+
             catch (OperationCanceledException)
             {
                 return default;
             }
+
             catch (Exception ex)
             {
                 Debug.LogError(ex);
@@ -260,23 +262,24 @@ namespace Taki.RubiksCube.System
             float intervalSeconds,
             CancellationToken token)
         {
-            if (!_instantiatedFaceRenderers.TryGetValue(face, out var matrix))
-                return;
-
-            if (!_faceColorMap.TryGetValue(face, out var faceColor))
-                return;
+            if (!_instantiatedFaceRenderers.TryGetValue(face, out var matrix)) return;
+            if (!_faceColorMap.TryGetValue(face, out var faceColor)) return;
 
             foreach (var (row, col) in indices)
             {
-                if (token.IsCancellationRequested)
-                    return;
+                if (token.IsCancellationRequested) return;
 
                 matrix[row, col].color = faceColor;
 
                 if (intervalSeconds <= 0)
+                {
                     await UniTask.Yield(PlayerLoopTiming.Update, token);
+                }
+
                 else
+                {
                     await UniTask.WaitForSeconds(intervalSeconds, cancellationToken: token);
+                }
             }
         }
 

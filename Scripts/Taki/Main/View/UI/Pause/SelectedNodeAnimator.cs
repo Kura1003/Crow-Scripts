@@ -79,16 +79,12 @@ namespace Taki.Main.View
 
             foreach (var graphic in _graphicsToFlash)
             {
-                if (graphic is null) continue;
-
                 graphic.color = _flashColor;
                 sequence.Join(graphic.DOColor(_originalColor, _flashDuration).SetEase(_flashEase));
             }
 
             foreach (var attachment in _attachmentsToRotateClockwise)
             {
-                if (attachment is null) continue;
-
                 var targetRotation = attachment.localEulerAngles + new Vector3(0, 0, _rotateAngleZ);
                 sequence.Join(attachment.DOLocalRotate(targetRotation, _rotateDuration, RotateMode.FastBeyond360)
                     .SetEase(_rotateEase));
@@ -96,8 +92,6 @@ namespace Taki.Main.View
 
             foreach (var attachment in _attachmentsToRotateCounterClockwise)
             {
-                if (attachment is null) continue;
-
                 var targetRotation = attachment.localEulerAngles + new Vector3(0, 0, -_rotateAngleZ);
                 sequence.Join(attachment.DOLocalRotate(targetRotation, _rotateDuration, RotateMode.FastBeyond360)
                     .SetEase(_rotateEase));

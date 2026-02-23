@@ -32,7 +32,6 @@ namespace Taki.Main.View
 
             foreach (var generator in _energyGenerators)
             {
-                if (generator is null) continue;
                 cumulativeCreationCount = await generator
                     .ChargeAndGenerate(cumulativeCreationCount, token);
 
@@ -86,6 +85,7 @@ namespace Taki.Main.View
             SetGeneratorsActive(true);
 
             var tasks = new List<UniTask>(_radiatedItems.Count);
+
             for (var i = 0; i < _radiatedItems.Count; i++)
             {
                 var targetPosition = _corePositions[i];
@@ -108,6 +108,7 @@ namespace Taki.Main.View
             StopAllBursts();
 
             var tasks = new List<UniTask>(_radiatedItems.Count);
+
             foreach (var item in _radiatedItems)
             {
                 var tween = item.DOLocalMove(Vector3.zero, _burstDuration)
@@ -132,6 +133,7 @@ namespace Taki.Main.View
             _isOverdriveAnimating = true;
 
             var tasks = new List<UniTask>(_radiatedItems.Count);
+
             for (var i = 0; i < _radiatedItems.Count; i++)
             {
                 var targetPosition = _overdrivePositions[i];
@@ -158,7 +160,7 @@ namespace Taki.Main.View
         {
             foreach (var generator in _energyGenerators)
             {
-                if (generator != null) generator.SetEnergyActive(isActive);
+                generator.SetEnergyActive(isActive);
             }
         }
 
