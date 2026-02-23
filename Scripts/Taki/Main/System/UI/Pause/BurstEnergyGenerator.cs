@@ -23,40 +23,49 @@ namespace Taki.Main.System
         private readonly List<Vector3> _burstPoints = new();
         private readonly List<Vector3> _overdrivePoints = new();
 
-        public async UniTask<int> ChargeAndGenerate(int currentTotalCount, CancellationToken token)
+        public async UniTask<int> ChargeAndGenerate(int currentTotalCount, CancellationToken cancellationToken)
         {
             ReleaseEnergy();
-            if (_burstItemPrefab is null) return currentTotalCount;
 
-            if (_burstPoints is List<Vector3> bpList) bpList.Capacity = _energyCount;
-            if (_overdrivePoints is List<Vector3> opList) opList.Capacity = _energyCount;
-            if (_generatedTransforms is List<Transform> gtList) gtList.Capacity = _energyCount;
+            if (_burstItemPrefab == null)
+                return currentTotalCount;
 
-            var points = CirclePointCalculator.GenerateCirclePoints(
-                Vector3.zero, _radiateRadius, _energyCount, _radiatePlane);
+            _generatedTransforms.Capacity =
+            _burstPoints.Capacity =
+            _overdrivePoints.Capacity = _energyCount;
+
+            var burstPoints = CirclePointCalculator.GenerateCirclePoints(
+                Vector3.zero,
+                _radiateRadius,
+                _energyCount,
+                _radiatePlane);
 
             var overdrivePoints = CirclePointCalculator.GenerateCirclePoints(
-                Vector3.zero, _radiateRadius * 2, _energyCount, _radiatePlane);
+                Vector3.zero,
+                _radiateRadius * 2f,
+                _energyCount,
+                _radiatePlane);
 
-            for (var i = 0; i < _energyCount; i++)
+            for (int index = 0; index < _energyCount; index++)
             {
-                if (token.IsCancellationRequested) return currentTotalCount;
+                cancellationToken.ThrowIfCancellationRequested();
 
-                _burstPoints.Add(points[i]);
-                _overdrivePoints.Add(overdrivePoints[i]);
+                _burstPoints.Add(burstPoints[index]);
+                _overdrivePoints.Add(overdrivePoints[index]);
 
-                GameObject newItem = Instantiate(_burstItemPrefab, transform);
-                Transform itemTransform = newItem.transform;
+                Transform generatedTransform =
+                    Instantiate(_burstItemPrefab, transform).transform;
 
-                itemTransform.SetLocalPositionAndRotation(points[i], Quaternion.identity);
-                _generatedTransforms.Add(itemTransform);
+                generatedTransform.SetLocalPositionAndRotation(
+                    burstPoints[index],
+                    Quaternion.identity);
 
-                currentTotalCount++;
+                _generatedTransforms.Add(generatedTransform);
 
-                if (currentTotalCount > 100)
+                if (++currentTotalCount > 100)
                 {
                     currentTotalCount = 0;
-                    await UniTask.Yield(PlayerLoopTiming.Update, token);
+                    await UniTask.Yield(PlayerLoopTiming.Update, cancellationToken);
                 }
             }
 
@@ -65,22 +74,22 @@ namespace Taki.Main.System
 
         public void SetEnergyActive(bool isActive)
         {
-            for (var i = 0; i < _generatedTransforms.Count; i++)
+            foreach (Transform generatedTransform in _generatedTransforms)
             {
-                if (_generatedTransforms[i] != null)
+                if (generatedTransform != null)
                 {
-                    _generatedTransforms[i].gameObject.SetActive(isActive);
+                    generatedTransform.gameObject.SetActive(isActive);
                 }
             }
         }
 
         public void ReleaseEnergy()
         {
-            for (var i = 0; i < _generatedTransforms.Count; i++)
+            foreach (Transform generatedTransform in _generatedTransforms)
             {
-                if (_generatedTransforms[i] != null)
+                if (generatedTransform != null)
                 {
-                    Destroy(_generatedTransforms[i].gameObject);
+                    Destroy(generatedTransform.gameObject);
                 }
             }
 

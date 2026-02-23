@@ -23,7 +23,7 @@ namespace Taki.StartMenu.System
             float endAngle = 270f;
             float totalRange = endAngle - startAngle;
 
-            float angleStep = _prefabs.Count > 1 ? totalRange / (_prefabs.Count - 1) : 0;
+            float angleStep = totalRange / (_prefabs.Count - 1);
 
             for (int i = 0; i < _prefabs.Count; i++)
             {
@@ -36,10 +36,7 @@ namespace Taki.StartMenu.System
                 GameObject obj = Instantiate(_prefabs[i], _centerTransform);
                 RectTransform rect = obj.GetComponent<RectTransform>();
 
-                if (rect != null)
-                {
-                    rect.anchoredPosition = new Vector2(x, y);
-                }
+                rect.anchoredPosition = new Vector2(x, y);
 
                 obj.SetActive(false);
                 _spawnedObjects.Add(obj);
@@ -50,8 +47,6 @@ namespace Taki.StartMenu.System
         {
             foreach (var obj in _spawnedObjects)
             {
-                if (obj == null) continue;
-
                 obj.SetActive(true);
                 AudioManager.Instance.Play("TextType", gameObject).SetVolume(0.5f);
 

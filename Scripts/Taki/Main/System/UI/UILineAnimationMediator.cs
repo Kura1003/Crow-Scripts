@@ -25,8 +25,6 @@ namespace Taki.Main.System
 
             foreach (var set in _animationSets)
             {
-                if (set.Generator is null || set.Animator is null) continue;
-
                 var entries = set.Generator.GenerateUIElements();
                 _cachedEntriesMap[set.Animator] = entries;
             }
@@ -36,8 +34,6 @@ namespace Taki.Main.System
         {
             foreach (var set in _animationSets)
             {
-                if (set.Animator is null) continue;
-
                 if (_cachedEntriesMap.TryGetValue(set.Animator, out var entries))
                 {
                     set.Animator.SetGraphicEntries(entries, true);

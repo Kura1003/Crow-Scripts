@@ -20,13 +20,6 @@ namespace Taki.Main.View
         private void Start()
         {
             _edgeEffect = _postProcessProvider.GetEffect<EdgeDetectionRobertsNeon>();
-
-            if (_edgeEffect is null)
-            {
-                Debug.LogError($"{nameof(EdgeDetectionRobertsNeon)} が PostProcessProfile に見つかりません。");
-                return;
-            }
-
             _edgeEffect.BackgroundFade.value = 0f;
             _edgeEffect.active = false;
         }
