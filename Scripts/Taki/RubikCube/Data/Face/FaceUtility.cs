@@ -23,12 +23,14 @@ namespace Taki.RubiksCube.Data
         {
             var random = SeedGenerator.GetRandom();
             var randomIndex = random.Next(0, _allFaces.Length);
+            
             return _allFaces[randomIndex];
         }
 
         internal static List<Face> GetFaces(Face faces)
         {
             var list = new List<Face>();
+            
             foreach (Face face in _allFaces)
             {
                 if (faces.HasFlag(face))
@@ -36,6 +38,7 @@ namespace Taki.RubiksCube.Data
                     list.Add(face);
                 }
             }
+            
             return list;
         }
     }
