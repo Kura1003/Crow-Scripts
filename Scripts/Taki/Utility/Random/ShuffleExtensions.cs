@@ -8,6 +8,7 @@ namespace Taki.Utility
         {
             var random = SeedGenerator.GetRandom();
             int n = array.Length;
+            
             while (n > 1)
             {
                 n--;
@@ -20,6 +21,7 @@ namespace Taki.Utility
         {
             var random = SeedGenerator.GetRandom();
             int n = list.Count;
+            
             while (n > 1)
             {
                 n--;
