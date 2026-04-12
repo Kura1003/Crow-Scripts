@@ -26,6 +26,7 @@ namespace Taki.RubiksCube.Data
             {
                 return new Vector2Int(_fixedIndex, lineIndex);
             }
+            
             else
             {
                 return new Vector2Int(lineIndex, _fixedIndex);
