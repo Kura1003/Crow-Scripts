@@ -21,7 +21,7 @@ namespace Taki.Utility
 
         public void ApplyRandomText()
         {
-            if (_textMeshPro == null) return;
+            if (_textMeshPro is null) return;
 
             string newText = RandomTextGenerator.Generate(_length, _charType);
             _textMeshPro.text = newText;
