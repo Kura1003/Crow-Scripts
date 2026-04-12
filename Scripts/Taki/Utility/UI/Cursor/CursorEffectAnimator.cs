@@ -51,15 +51,11 @@ namespace Taki.Utility
                 _canvasGroup.DOFade(0f, _animationDuration)
                 .SetEase(_fadeEaseType)
             );
-
-            sequence.SetUpdate(_ignoreTimeScale)
-                .SetLink(gameObject) 
-                .OnComplete(() => {
-                    if (this != null && gameObject != null) 
-                    {
-                        Destroy(gameObject);
-                    }
-                });
+            
+            sequence
+                .SetUpdate(_ignoreTimeScale)
+                .SetLink(gameObject)
+                .OnComplete(() => Destroy(gameObject));
         }
     }
 }
